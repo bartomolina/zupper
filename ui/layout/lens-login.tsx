@@ -8,7 +8,9 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { polygonMumbai } from "@wagmi/core/chains";
 import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
+import { InjectedConnector } from "@wagmi/core/connectors/injected";
 
 import { getPictureURL } from "@/lib/get-picture-url";
 import { truncateAddr } from "@/lib/truncate-address";
@@ -27,12 +29,16 @@ export function LensLogin() {
   const { isConnected } = useAccount();
   const { connectAsync } = useConnect({
     connector: new WalletConnectConnector({
+      chains: [polygonMumbai],
       options: {
         projectId: process.env
           .NEXT_PUBLIC_NETWORKWALLETCONNECT_PROJECTID as string,
       },
     }),
   });
+  // const { connectAsync } = useConnect({
+  //   connector: new InjectedConnector(),
+  // });
   const { disconnectAsync } = useDisconnect();
   const { data: activeProfile } = useActiveProfile();
 
@@ -44,6 +50,7 @@ export function LensLogin() {
     const { connector } = await connectAsync();
 
     if (connector instanceof WalletConnectConnector) {
+      // if (connector instanceof InjectedConnector) {
       const signer = await connector.getSigner();
       const result = await login(signer);
     }
