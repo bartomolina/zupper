@@ -11,6 +11,7 @@ import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { polygonMumbai } from "@wagmi/core/chains";
 import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
 import { InjectedConnector } from "@wagmi/core/connectors/injected";
+import { MetaMaskConnector } from "@wagmi/core/connectors/metaMask";
 
 import { getPictureURL } from "@/lib/get-picture-url";
 import { truncateAddr } from "@/lib/truncate-address";
@@ -27,32 +28,49 @@ export function LensLogin() {
   const { execute: logout } = useWalletLogout();
   const { data: wallet } = useActiveWallet();
   const { isConnected } = useAccount();
-  const { connectAsync } = useConnect({
-    connector: new WalletConnectConnector({
-      chains: [polygonMumbai],
-      options: {
-        projectId: process.env
-          .NEXT_PUBLIC_NETWORKWALLETCONNECT_PROJECTID as string,
-      },
-    }),
-  });
+  // const { connectAsync } = useConnect({
+  //   connector: new WalletConnectConnector({
+  //     chains: [polygonMumbai],
+  //     options: {
+  //       projectId: process.env
+  //         .NEXT_PUBLIC_NETWORKWALLETCONNECT_PROJECTID as string,
+  //     },
+  //   }),
+  // });
   // const { connectAsync } = useConnect({
   //   connector: new InjectedConnector(),
   // });
+  const { connectAsync } = useConnect({
+    connector: new MetaMaskConnector(),
+  });
   const { disconnectAsync } = useDisconnect();
   const { data: activeProfile } = useActiveProfile();
 
   const onLoginClick = async (isOwner: boolean) => {
+    console.log("connecting1");
     if (isConnected) {
+      console.log("isconnected");
       await disconnectAsync();
     }
 
+    console.log("connecting2");
+
     const { connector } = await connectAsync();
 
-    if (connector instanceof WalletConnectConnector) {
+    console.log("resolved");
+
+    // if (connector instanceof WalletConnectConnector) {
+    if (connector instanceof MetaMaskConnector) {
+      console.log("walletconnect");
       // if (connector instanceof InjectedConnector) {
       const signer = await connector.getSigner();
+      console.log("signer resolved");
+      console.log("signer", signer);
       const result = await login(signer);
+      console.log("login complete");
+      console.log("result:", result);
+    } else {
+      console.log("notwalletconnect");
     }
   };
 
@@ -110,13 +128,15 @@ export function LensLogin() {
           </div>
         )
       ) : (
-        <button
-          className="btn-primary btn whitespace-nowrap normal-case text-lg w-32"
-          disabled={isLoginPending}
-          onClick={() => onLoginClick(true)}
-        >
-          Owner
-        </button>
+        <>
+          <button
+            className="btn-primary btn whitespace-nowrap normal-case text-lg w-32"
+            disabled={isLoginPending}
+            onClick={() => onLoginClick(true)}
+          >
+            Owner
+          </button>
+        </>
       )}
     </>
   );
