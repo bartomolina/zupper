@@ -8,7 +8,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { InjectedConnector } from "wagmi/connectors/injected";
 import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
 
 import { getPictureURL } from "@/lib/get-picture-url";
@@ -38,6 +37,10 @@ export function LensLogin() {
   const { data: activeProfile } = useActiveProfile();
 
   const onLoginClick = async (isOwner: boolean) => {
+    console.log(
+      "ProjectId",
+      process.env.NEXT_PUBLIC_NETWORKWALLETCONNECT_PROJECTID
+    );
     if (isConnected) {
       await disconnectAsync();
     }
