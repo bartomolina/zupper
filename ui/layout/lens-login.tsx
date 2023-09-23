@@ -8,26 +8,34 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useWalletClient } from "wagmi";
 import { polygonMumbai } from "@wagmi/core/chains";
 import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
 import { InjectedConnector } from "@wagmi/core/connectors/injected";
 import { MetaMaskConnector } from "@wagmi/core/connectors/metaMask";
+
+import { useRouter } from "next/navigation";
 
 import { getPictureURL } from "@/lib/get-picture-url";
 import { truncateAddr } from "@/lib/truncate-address";
 
 import { LensProfiles } from "./lens-profiles";
 
+import { Web3Button, useWeb3Modal } from "@web3modal/react";
+
+import { login } from "@/lib/lens-api";
+
 export function LensLogin() {
-  const [isOwner, setIsOwner] = useState(false);
+  const { open, close } = useWeb3Modal();
   const {
-    execute: login,
+    execute,
     error: loginError,
     isPending: isLoginPending,
   } = useWalletLogin();
   const { execute: logout } = useWalletLogout();
   const { data: wallet } = useActiveWallet();
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
+  const { data: walletClient } = useWalletClient();
   const { connectAsync } = useConnect({
     connector: new WalletConnectConnector({
       chains: [polygonMumbai],
@@ -37,42 +45,25 @@ export function LensLogin() {
       },
     }),
   });
-  // const { connectAsync } = useConnect({
-  //   connector: new InjectedConnector(),
-  // });
   const { disconnectAsync } = useDisconnect();
   const { data: activeProfile } = useActiveProfile();
-
-  const onLoginClick = async (isOwner: boolean) => {
-    console.log("connecting1");
-    if (isConnected) {
-      console.log("isconnected");
-      await disconnectAsync();
-    }
-
-    console.log("connecting2");
-
-    const { connector } = await connectAsync();
-
-    console.log("resolved");
-
-    if (connector instanceof WalletConnectConnector) {
-      // if (connector instanceof InjectedConnector) {
-      console.log("walletconnect");
-      const signer = await connector.getSigner();
-      console.log("signer resolved");
-      console.log("signer", signer);
-      const result = await login(signer);
-      console.log("login complete");
-      console.log("result:", result);
-    } else {
-      console.log("notwalletconnect");
-    }
-  };
+  const { push } = useRouter();
 
   useEffect(() => {
     loginError && toast.error(loginError.message);
   }, [loginError]);
+
+  useEffect(() => {
+    if (isConnected && walletClient && address) {
+      console.log("connected");
+      // console.log(walletClient.signMesage("test"));
+      login(address, walletClient).then(() => {
+        push("/item");
+      });
+    } else {
+      console.log("disconnected");
+    }
+  }, [isConnected, address, walletClient]);
 
   return (
     <>
@@ -128,7 +119,7 @@ export function LensLogin() {
           <button
             className="btn-primary btn whitespace-nowrap normal-case text-lg w-32"
             disabled={isLoginPending}
-            onClick={() => onLoginClick(true)}
+            onClick={() => open()}
           >
             Owner
           </button>

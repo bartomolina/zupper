@@ -1,12 +1,10 @@
 "use client";
 
-import Link from "next/link";
-
 import { LensLogin } from "@/ui/layout/lens-login";
 
 export default function Home() {
   return (
-    <div className="mt-36 grid justify-center gap-36 text-center">
+    <div className="mt-36 grid justify-center gap-48 text-center">
       <div className="text-center">
         <div className="text-5xl">🤤</div>
         <div className="text-4xl font-semibold">Zupper</div>
