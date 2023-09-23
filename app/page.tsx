@@ -11,10 +11,9 @@ export default function Home() {
         <div className="text-5xl">🤤</div>
         <div className="text-4xl font-semibold">Zupper</div>
       </div>
-      <div className="grid gap-5 divide-y">
-        <div className="text-2xl">Login</div>
+      <div className="grid gap-5">
         <div className="pt-3">
-          <div className="btn-secondary btn whitespace-nowrap normal-case text-lg">
+          <div className="btn-secondary w-32 btn whitespace-nowrap normal-case text-lg">
             Customer
           </div>
           <div className="mt-3">

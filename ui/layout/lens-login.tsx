@@ -37,10 +37,6 @@ export function LensLogin() {
   const { data: activeProfile } = useActiveProfile();
 
   const onLoginClick = async (isOwner: boolean) => {
-    console.log(
-      "ProjectId",
-      process.env.NEXT_PUBLIC_NETWORKWALLETCONNECT_PROJECTID
-    );
     if (isConnected) {
       await disconnectAsync();
     }
@@ -50,7 +46,6 @@ export function LensLogin() {
     if (connector instanceof WalletConnectConnector) {
       const signer = await connector.getSigner();
       const result = await login(signer);
-      console.log("Result:", result);
     }
   };
 
@@ -109,7 +104,7 @@ export function LensLogin() {
         )
       ) : (
         <button
-          className="btn-primary btn whitespace-nowrap normal-case text-lg"
+          className="btn-primary btn whitespace-nowrap normal-case text-lg w-32"
           disabled={isLoginPending}
           onClick={() => onLoginClick(true)}
         >
