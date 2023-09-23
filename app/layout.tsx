@@ -56,7 +56,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html data-theme="light" lang="en" suppressHydrationWarning>
+    <html data-theme="winter" lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="icon"

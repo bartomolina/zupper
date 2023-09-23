@@ -14,11 +14,11 @@ export default function Home() {
       <div className="grid gap-5 divide-y">
         <div className="text-2xl">Login</div>
         <div className="pt-3">
-          <div>
-            <LensLogin />
-          </div>
-          <div className="btn-secondary btn-sm btn mt-3 whitespace-nowrap normal-case text-3xl">
+          <div className="btn-secondary btn whitespace-nowrap normal-case text-lg">
             Customer
+          </div>
+          <div className="mt-3">
+            <LensLogin />
           </div>
         </div>
       </div>

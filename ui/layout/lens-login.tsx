@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
+import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
 
 import { getPictureURL } from "@/lib/get-picture-url";
 import { truncateAddr } from "@/lib/truncate-address";
@@ -26,7 +27,12 @@ export function LensLogin() {
   const { data: wallet } = useActiveWallet();
   const { isConnected } = useAccount();
   const { connectAsync } = useConnect({
-    connector: new InjectedConnector(),
+    connector: new WalletConnectConnector({
+      options: {
+        projectId: process.env
+          .NEXT_PUBLIC_NETWORKWALLETCONNECT_PROJECTID as string,
+      },
+    }),
   });
   const { disconnectAsync } = useDisconnect();
   const { data: activeProfile } = useActiveProfile();
@@ -38,7 +44,7 @@ export function LensLogin() {
 
     const { connector } = await connectAsync();
 
-    if (connector instanceof InjectedConnector) {
+    if (connector instanceof WalletConnectConnector) {
       const signer = await connector.getSigner();
       const result = await login(signer);
       console.log("Result:", result);
@@ -100,7 +106,7 @@ export function LensLogin() {
         )
       ) : (
         <button
-          className="btn-primary btn-sm btn whitespace-nowrap text-3xl normal-case"
+          className="btn-primary btn whitespace-nowrap normal-case text-lg"
           disabled={isLoginPending}
           onClick={() => onLoginClick(true)}
         >
