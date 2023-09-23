@@ -28,21 +28,18 @@ export function LensLogin() {
   const { execute: logout } = useWalletLogout();
   const { data: wallet } = useActiveWallet();
   const { isConnected } = useAccount();
-  // const { connectAsync } = useConnect({
-  //   connector: new WalletConnectConnector({
-  //     chains: [polygonMumbai],
-  //     options: {
-  //       projectId: process.env
-  //         .NEXT_PUBLIC_NETWORKWALLETCONNECT_PROJECTID as string,
-  //     },
-  //   }),
-  // });
+  const { connectAsync } = useConnect({
+    connector: new WalletConnectConnector({
+      chains: [polygonMumbai],
+      options: {
+        projectId: process.env
+          .NEXT_PUBLIC_NETWORKWALLETCONNECT_PROJECTID as string,
+      },
+    }),
+  });
   // const { connectAsync } = useConnect({
   //   connector: new InjectedConnector(),
   // });
-  const { connectAsync } = useConnect({
-    connector: new MetaMaskConnector(),
-  });
   const { disconnectAsync } = useDisconnect();
   const { data: activeProfile } = useActiveProfile();
 
@@ -59,10 +56,9 @@ export function LensLogin() {
 
     console.log("resolved");
 
-    // if (connector instanceof WalletConnectConnector) {
-    if (connector instanceof MetaMaskConnector) {
-      console.log("walletconnect");
+    if (connector instanceof WalletConnectConnector) {
       // if (connector instanceof InjectedConnector) {
+      console.log("walletconnect");
       const signer = await connector.getSigner();
       console.log("signer resolved");
       console.log("signer", signer);
