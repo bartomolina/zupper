@@ -100,7 +100,7 @@ export function LensLogin() {
         )
       ) : (
         <button
-          className="btn-primary btn-sm btn whitespace-nowrap normal-case"
+          className="btn-primary btn-sm btn whitespace-nowrap text-3xl normal-case"
           disabled={isLoginPending}
           onClick={() => onLoginClick(true)}
         >

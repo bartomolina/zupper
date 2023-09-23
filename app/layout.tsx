@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   description: APP_DESCRIPTION,
   manifest: "/manifest.json",
-  themeColor: "#00FF00",
+  themeColor: "#FFFFFF",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -56,7 +56,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html data-theme="light" lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="icon"
