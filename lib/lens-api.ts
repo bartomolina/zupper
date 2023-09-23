@@ -8,6 +8,7 @@ import {
 import { gql } from "@apollo/client";
 
 export const generateChallenge = async (request: any) => {
+  console.log("Querying...");
   const result = await apolloClient.query({
     query: gql(challengeQuery),
     variables: {
@@ -39,7 +40,7 @@ export const login = async (address: any, walletClient: any) => {
 
   // we request a challenge from the server
   const challengeResponse = await generateChallenge({ address });
-  console.log(walletClient);
+  console.log("walletclient:", walletClient);
 
   // sign the text with the wallet
   console.log(challengeResponse.text);
